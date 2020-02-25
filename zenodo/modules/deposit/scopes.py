@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Zenodo.
-# Copyright (C) 2016 CERN.
+# Copyright (C) 2019 CERN.
 #
 # Zenodo is free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public License as
@@ -22,25 +22,16 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-"""Zenodo-specific InvenioIndexer utility functions."""
+"""OAuth2 deposit scopes."""
 
 from __future__ import absolute_import, print_function
 
-from flask import current_app
-from invenio_indexer.utils import default_record_to_index
+from flask_babelex import lazy_gettext as _
+from invenio_deposit.scopes import DepositScope
 
-
-def record_to_index(record):
-    """Get the elasticsearch index and doc_type for given record.
-
-    Construct the index name from the `record['$schema']`, which is then
-    mapped with an elastisearch document type (fixed difinition in the config).
-
-    :param record: The record object.
-    :type record: `invenio_records.api.Record`
-    :returns: Tuple of (index, doc_type)
-    :rtype: (str, str)
-    """
-    index, doc_type = default_record_to_index(record)
-    return index, current_app.config['INDEXER_SCHEMA_TO_INDEX_MAP'].get(
-        index, doc_type)
+extra_formats_scope = DepositScope(
+    'extra_formats',
+    help_text=_('Allow CRUD operations on extra formats files.'),
+    internal=True,
+)
+"""Allow CRUD operations on extra formats files."""
